@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter @Setter
 @AllArgsConstructor
@@ -24,5 +25,9 @@ public class Venta {
 
     @ManyToOne
     private Sucursal sucursal;
+
+    @OneToMany(mappedBy = "venta")
+    private List<DetalleVenta> detalleVentaList;
+
 
 }

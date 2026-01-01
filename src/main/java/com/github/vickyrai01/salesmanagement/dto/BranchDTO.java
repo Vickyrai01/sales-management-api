@@ -8,11 +8,11 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SucursalDTO {
+public class BranchDTO {
 
     private Long id;
-    private String nombre;
-    private String direccion;
-    private String telefono;
+    private String name;
+    private String direction;
+    private String telephone;
 
 }

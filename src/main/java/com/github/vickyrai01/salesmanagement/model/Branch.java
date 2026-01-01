@@ -1,6 +1,5 @@
 package com.github.vickyrai01.salesmanagement.model;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,15 +13,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Producto {
-
+public class Branch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nombre;
-    private Double precio;
-    private String descripcion;
-    private Integer cantidad;
-    private String categoria;
+    private String name;
+    private String direction;
+    private String telephone;
+
 }

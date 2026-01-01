@@ -1,29 +1,33 @@
 package com.github.vickyrai01.salesmanagement.model;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class DetalleVenta {
+public class Sale {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    private Venta venta;
-
-    @ManyToOne
-    private Producto producto;
-
-    private Integer cantidad;
-    private Double precio;
-
+    private LocalDate date;
+    private String state;
     private Double total;
+
+    @ManyToOne
+    private Branch branch;
+
+    @OneToMany(mappedBy = "sale")
+    private List<SaleItem> saleItemList;
+
 
 }

@@ -8,14 +8,13 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DetalleVentaDTO {
+public class ProductDTO {
 
     private Long id;
-    private Integer cantidad;
-    private Double precio;
+    private String name;
+    private Double price;
+    private String description;
+    private Integer quantity;
+    private String category;
 
-    private Double total;
-
-    private Long productoId;
-    private Long ventaId;
 }

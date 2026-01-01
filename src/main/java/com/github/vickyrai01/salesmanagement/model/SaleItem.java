@@ -1,9 +1,6 @@
 package com.github.vickyrai01.salesmanagement.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +10,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Sucursal {
-
+public class SaleItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nombre;
-    private String direccion;
-    private String telefono;
+
+    @ManyToOne
+    private Sale sale;
+
+    @ManyToOne
+    private Product product;
+
+    private Integer quantity;
+    private Double price;
+
+    private Double total;
 
 }

@@ -1,9 +1,6 @@
 package com.github.vickyrai01.salesmanagement.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class SaleDTO {
 
     private Long id;
@@ -19,7 +17,7 @@ public class SaleDTO {
     private String state;
     private Double total;
 
-    private Long sucursalId;
+    private Long branchId;
 
     private List<SaleItemDTO> saleItemDTOList;
 }

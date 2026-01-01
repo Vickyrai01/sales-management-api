@@ -1,13 +1,11 @@
 package com.github.vickyrai01.salesmanagement.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class SaleItemDTO {
 
     private Long id;
@@ -17,5 +15,5 @@ public class SaleItemDTO {
     private Double total;
 
     private Long productId;
-    private Long SaleId;
+    private Long saleId;
 }

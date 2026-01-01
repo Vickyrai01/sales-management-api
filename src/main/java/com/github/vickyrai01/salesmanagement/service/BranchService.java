@@ -1,6 +1,7 @@
 package com.github.vickyrai01.salesmanagement.service;
 
 import com.github.vickyrai01.salesmanagement.dto.BranchDTO;
+import com.github.vickyrai01.salesmanagement.exceprion.BodyIsEmptyException;
 import com.github.vickyrai01.salesmanagement.exceprion.NotFoundException;
 import com.github.vickyrai01.salesmanagement.mapper.Mapper;
 import com.github.vickyrai01.salesmanagement.model.Branch;
@@ -30,6 +31,9 @@ public class BranchService implements IBranchService {
 
     @Override
     public BranchDTO saveBranch(BranchDTO branchDTO) {
+
+        if(branchDTO == null) throw new BodyIsEmptyException("Body is empty");
+
         var branch = Branch.builder()
                 .id(branchDTO.getId())
                 .name(branchDTO.getName())

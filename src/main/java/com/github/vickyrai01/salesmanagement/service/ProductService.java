@@ -1,7 +1,7 @@
 package com.github.vickyrai01.salesmanagement.service;
 
 import com.github.vickyrai01.salesmanagement.dto.ProductDTO;
-import com.github.vickyrai01.salesmanagement.exceprion.NotFoundException;
+import com.github.vickyrai01.salesmanagement.exception.NotFoundException;
 import com.github.vickyrai01.salesmanagement.mapper.Mapper;
 import com.github.vickyrai01.salesmanagement.model.Product;
 import com.github.vickyrai01.salesmanagement.repository.ProductRepository;
@@ -56,7 +56,6 @@ public class ProductService implements IProductService {
 
         return Mapper.toDTO(productRepository.save(product));
     }
-
     @Override
     public void deleteProduct(Long id) {
         if (!productRepository.existsById(id)) throw new NotFoundException("Product not found");

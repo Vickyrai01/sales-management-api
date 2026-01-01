@@ -1,8 +1,8 @@
 package com.github.vickyrai01.salesmanagement.service;
 
 import com.github.vickyrai01.salesmanagement.dto.BranchDTO;
-import com.github.vickyrai01.salesmanagement.exceprion.BodyIsEmptyException;
-import com.github.vickyrai01.salesmanagement.exceprion.NotFoundException;
+import com.github.vickyrai01.salesmanagement.exception.BodyIsEmptyException;
+import com.github.vickyrai01.salesmanagement.exception.NotFoundException;
 import com.github.vickyrai01.salesmanagement.mapper.Mapper;
 import com.github.vickyrai01.salesmanagement.model.Branch;
 import com.github.vickyrai01.salesmanagement.repository.BranchRepository;

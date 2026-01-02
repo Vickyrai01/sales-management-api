@@ -2,6 +2,7 @@ package com.github.vickyrai01.salesmanagement.controller;
 
 import com.github.vickyrai01.salesmanagement.dto.ProductDTO;
 import com.github.vickyrai01.salesmanagement.service.IProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> saveProduct(@RequestBody ProductDTO productDTO){
+    public ResponseEntity<ProductDTO> saveProduct(@Valid @RequestBody ProductDTO productDTO){
         ProductDTO product = productService.saveProduct(productDTO);
         return ResponseEntity.created(URI.create("/api/product/" + product.getId())).body(product);
     }

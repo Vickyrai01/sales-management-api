@@ -2,6 +2,7 @@ package com.github.vickyrai01.salesmanagement.controller;
 
 import com.github.vickyrai01.salesmanagement.dto.BranchDTO;
 import com.github.vickyrai01.salesmanagement.service.IBranchService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class BranchController {
     }
 
     @PostMapping
-    public ResponseEntity<BranchDTO> saveBranch(@RequestBody BranchDTO branchDTO){
+    public ResponseEntity<BranchDTO> saveBranch(@Valid @RequestBody BranchDTO branchDTO){
         BranchDTO branch = branchService.saveBranch(branchDTO);
         return ResponseEntity.created(URI.create("/api/branch/" + branch.getId())).body(branch);
     }

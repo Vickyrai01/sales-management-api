@@ -3,6 +3,7 @@ package com.github.vickyrai01.salesmanagement.controller;
 import com.github.vickyrai01.salesmanagement.dto.SaleDTO;
 import com.github.vickyrai01.salesmanagement.repository.SaleRepository;
 import com.github.vickyrai01.salesmanagement.service.ISaleService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class SaleController {
     }
 
     @PostMapping
-    public ResponseEntity<SaleDTO> saveSale(@RequestBody SaleDTO saleDTO){
+    public ResponseEntity<SaleDTO> saveSale(@Valid @RequestBody SaleDTO saleDTO){
         SaleDTO sale = saleService.saveSale(saleDTO);
         return ResponseEntity.created(URI.create("/api/sale/" + sale.getId())).body(sale);
     }

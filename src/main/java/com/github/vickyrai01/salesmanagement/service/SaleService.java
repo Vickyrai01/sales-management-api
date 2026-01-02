@@ -58,6 +58,7 @@ public class SaleService implements ISaleService {
                 .saleItemList(saleItemList)
                 .build();
 
+        saleItemList.forEach(item -> item.setSale(sale));
         return Mapper.toDTO(saleRepository.save(sale));
     }
 
@@ -86,10 +87,8 @@ public class SaleService implements ISaleService {
     private SaleItem toClass(SaleItemDTO saleItemDTO) {
 
         if(!productRepository.existsById(saleItemDTO.getProductId())) throw new NotFoundException("Product not found");
-        if(!saleRepository.existsById(saleItemDTO.getSaleId())) throw new NotFoundException("Sale not found");
 
         Product product = productRepository.findById(saleItemDTO.getProductId()).orElse(null);
-        Sale sale = saleRepository.findById(saleItemDTO.getSaleId()).orElse(null);
 
         return SaleItem.builder()
                 .id(saleItemDTO.getId())
@@ -97,7 +96,6 @@ public class SaleService implements ISaleService {
                 .price(saleItemDTO.getPrice())
                 .total(saleItemDTO.getTotal())
                 .product(product)
-                .sale(sale)
                 .build();
 
     }

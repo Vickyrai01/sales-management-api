@@ -24,7 +24,7 @@ public class Sale {
     @ManyToOne
     private Branch branch;
 
-    @OneToMany(mappedBy = "sale")
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<SaleItem> saleItemList;
 
 }

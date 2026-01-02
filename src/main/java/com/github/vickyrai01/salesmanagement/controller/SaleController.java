@@ -16,7 +16,7 @@ public class SaleController {
 
     private final ISaleService saleService;
 
-    public SaleController(ISaleService saleService, SaleRepository saleRepository) {
+    public SaleController(ISaleService saleService) {
         this.saleService = saleService;
     }
 
@@ -33,7 +33,7 @@ public class SaleController {
     @PostMapping
     public ResponseEntity<SaleDTO> saveSale(@RequestBody SaleDTO saleDTO){
         SaleDTO sale = saleService.saveSale(saleDTO);
-        return ResponseEntity.created(URI.create("api/sale/" + sale.getId())).body(sale);
+        return ResponseEntity.created(URI.create("/api/sale/" + sale.getId())).body(sale);
     }
 
     @PutMapping("/{id}")

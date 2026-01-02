@@ -2,7 +2,6 @@ package com.github.vickyrai01.salesmanagement.service;
 
 import com.github.vickyrai01.salesmanagement.dto.SaleDTO;
 import com.github.vickyrai01.salesmanagement.dto.SaleItemDTO;
-import com.github.vickyrai01.salesmanagement.exception.BodyIsEmptyException;
 import com.github.vickyrai01.salesmanagement.exception.NotFoundException;
 import com.github.vickyrai01.salesmanagement.mapper.Mapper;
 import com.github.vickyrai01.salesmanagement.model.Branch;
@@ -42,9 +41,8 @@ public class SaleService implements ISaleService {
     @Override
     public SaleDTO saveSale(SaleDTO saleDTO) {
 
-        if(saleDTO == null) throw new BodyIsEmptyException("Body is empty");
         if(!branchRepository.existsById(saleDTO.getBranchId())) throw new NotFoundException("Branch not found");
-        if(saleDTO.getSaleItemDTOList() == null) throw new BodyIsEmptyException("The list must contain at least one item");
+        if(saleDTO.getSaleItemDTOList() == null) throw new RuntimeException("The list must contain at least one item");
 
         Branch branch = branchRepository.findById(saleDTO.getBranchId()).orElse(null);
         List<SaleItem> saleItemList = saleDTO.getSaleItemDTOList().stream().map(this::toClass).toList();
@@ -66,7 +64,6 @@ public class SaleService implements ISaleService {
     public SaleDTO updateSale(Long id, SaleDTO saleDTO) {
 
         var sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
-        if(saleDTO == null) throw new BodyIsEmptyException("Body is empty");
 
         if(saleDTO.getDate() != null) sale.setDate(saleDTO.getDate());
         if(saleDTO.getState() != null) sale.setState(saleDTO.getState());

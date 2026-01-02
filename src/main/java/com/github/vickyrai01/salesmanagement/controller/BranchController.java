@@ -31,7 +31,7 @@ public class BranchController {
     @PostMapping
     public ResponseEntity<BranchDTO> saveBranch(@RequestBody BranchDTO branchDTO){
         BranchDTO branch = branchService.saveBranch(branchDTO);
-        return ResponseEntity.created(URI.create("api/branch/" + branch.getId())).body(branch);
+        return ResponseEntity.created(URI.create("/api/branch/" + branch.getId())).body(branch);
     }
 
     @PutMapping("/{id}")

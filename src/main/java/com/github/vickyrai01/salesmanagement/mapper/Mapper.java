@@ -1,13 +1,7 @@
 package com.github.vickyrai01.salesmanagement.mapper;
 
-import com.github.vickyrai01.salesmanagement.dto.BranchDTO;
-import com.github.vickyrai01.salesmanagement.dto.ProductDTO;
-import com.github.vickyrai01.salesmanagement.dto.SaleDTO;
-import com.github.vickyrai01.salesmanagement.dto.SaleItemDTO;
-import com.github.vickyrai01.salesmanagement.model.Branch;
-import com.github.vickyrai01.salesmanagement.model.Product;
-import com.github.vickyrai01.salesmanagement.model.Sale;
-import com.github.vickyrai01.salesmanagement.model.SaleItem;
+import com.github.vickyrai01.salesmanagement.dto.*;
+import com.github.vickyrai01.salesmanagement.model.*;
 
 public class Mapper {
 
@@ -22,7 +16,7 @@ public class Mapper {
                 .price(product.getPrice())
                 .description(product.getDescription())
                 .quantity(product.getQuantity())
-                .category(product.getCategory())
+                .categoryList(product.getCategoryList().stream().map(Category::getId).toList())
                 .build();
     }
 
@@ -50,7 +44,7 @@ public class Mapper {
                 .build();
     }
 
-    //sale to DTO
+
     public static SaleDTO toDTO(Sale sale){
         if (sale == null) return null;
 
@@ -64,4 +58,12 @@ public class Mapper {
                 .build();
     }
 
+    public static CategoryDTO toDTO(Category category){
+        if (category == null) return null;
+
+        return CategoryDTO.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .build();
+    }
 }

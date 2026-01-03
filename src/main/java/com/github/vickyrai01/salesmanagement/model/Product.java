@@ -21,7 +21,6 @@ public class Product {
     private Double price;
     private String description;
     private Integer quantity;
-    private String category;
 
     @ManyToMany
     @JoinTable(
@@ -29,5 +28,5 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Set<Category> categories = new HashSet<>();
+    private Set<Category> categoryList = new HashSet<>();
 }

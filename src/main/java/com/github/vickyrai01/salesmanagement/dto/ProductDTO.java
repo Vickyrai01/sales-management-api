@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
+import java.util.List;
+
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,8 +31,7 @@ public class ProductDTO {
     @PositiveOrZero(message = "Quantity cannot be negative")
     private Integer quantity;
 
-    @NotNull(message = "Category cannot be null")
-    @NotBlank(message = "Category cannot be null")
-    private String category;
+    @NotNull(message = "The product must have at least one category")
+    private List<Long> categoryList;
 
 }

@@ -8,9 +8,11 @@ import com.github.vickyrai01.salesmanagement.model.Branch;
 import com.github.vickyrai01.salesmanagement.model.Product;
 import com.github.vickyrai01.salesmanagement.model.Sale;
 import com.github.vickyrai01.salesmanagement.model.SaleItem;
+import com.github.vickyrai01.salesmanagement.model.enums.SaleState;
 import com.github.vickyrai01.salesmanagement.repository.BranchRepository;
 import com.github.vickyrai01.salesmanagement.repository.ProductRepository;
 import com.github.vickyrai01.salesmanagement.repository.SaleRepository;
+import com.github.vickyrai01.salesmanagement.service.calculator.SaleCalculator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +23,13 @@ public class SaleService implements ISaleService {
     private final SaleRepository saleRepository;
     private final BranchRepository branchRepository;
     private final ProductRepository productRepository;
+    private final SaleCalculator saleCalculator;
 
-    public SaleService(SaleRepository saleRepository, BranchRepository branchRepository, ProductRepository productRepository) {
+    public SaleService(SaleRepository saleRepository, BranchRepository branchRepository, ProductRepository productRepository, SaleCalculator saleCalculator) {
         this.saleRepository = saleRepository;
         this.branchRepository = branchRepository;
         this.productRepository = productRepository;
+        this.saleCalculator = saleCalculator;
     }
 
     @Override
@@ -46,12 +50,13 @@ public class SaleService implements ISaleService {
 
         Branch branch = branchRepository.findById(saleDTO.getBranchId()).orElse(null);
         List<SaleItem> saleItemList = saleDTO.getSaleItemDTOList().stream().map(this::toClass).toList();
+        Double total = saleCalculator.calculateSaleTotal(saleItemList);
 
         var sale = Sale.builder()
                 .id(saleDTO.getId())
                 .date(saleDTO.getDate())
-                .state(saleDTO.getState())
-                .total(saleDTO.getTotal())
+                .state(SaleState.CREATED)
+                .total(total)
                 .branch(branch)
                 .saleItemList(saleItemList)
                 .build();
@@ -83,15 +88,14 @@ public class SaleService implements ISaleService {
 
     private SaleItem toClass(SaleItemDTO saleItemDTO) {
 
-        if(!productRepository.existsById(saleItemDTO.getProductId())) throw new NotFoundException("Product not found");
-
-        Product product = productRepository.findById(saleItemDTO.getProductId()).orElse(null);
+        Product product = productRepository.findById(saleItemDTO.getProductId()).orElseThrow(() -> new NotFoundException("Product not found"));
+        Double total = saleCalculator.calculateSaleItemTotal(saleItemDTO.getQuantity(), product);
 
         return SaleItem.builder()
                 .id(saleItemDTO.getId())
                 .quantity(saleItemDTO.getQuantity())
-                .price(saleItemDTO.getPrice())
-                .total(saleItemDTO.getTotal())
+                .price(product.getPrice())
+                .total(total)
                 .product(product)
                 .build();
 

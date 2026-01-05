@@ -1,6 +1,8 @@
 package com.github.vickyrai01.salesmanagement.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.github.vickyrai01.salesmanagement.model.enums.SaleState;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,7 +20,11 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDate date;
-    private String state;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private SaleState state;
+
     private Double total;
 
     @ManyToOne
@@ -26,5 +32,7 @@ public class Sale {
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<SaleItem> saleItemList;
+
+
 
 }

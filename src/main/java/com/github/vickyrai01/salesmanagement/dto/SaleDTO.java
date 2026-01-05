@@ -1,5 +1,6 @@
 package com.github.vickyrai01.salesmanagement.dto;
 
+import com.github.vickyrai01.salesmanagement.model.enums.SaleState;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -20,12 +21,8 @@ public class SaleDTO {
     @NotNull(message = "Date cannot be null")
     private LocalDate date;
 
-    @NotNull(message = "State cannot be null")
-    @NotBlank(message = "State cannot be blank")
-    private String state;
+    private SaleState state;
 
-    @NotNull(message = "Total cannot be null")
-    @PositiveOrZero(message = "Total cannot be negative")
     private Double total;
 
     @NotNull(message = "The sale must have a branch")

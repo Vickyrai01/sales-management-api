@@ -31,6 +31,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ErrorMessage> handleAlreadyExists(AlreadyExistsException ex, HttpServletRequest req) {
+        ErrorMessage body = new ErrorMessage();
+        body.setStatus(409);
+        body.setError("ALREADY_EXISTS");
+        body.setMessage(ex.getMessage());
+        body.setPath(req.getRequestURI());
+        body.setTimestamp(Instant.now());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleGeneric(Exception ex, HttpServletRequest req) {
 

@@ -1,12 +1,14 @@
 package com.github.vickyrai01.salesmanagement.service;
 
 import com.github.vickyrai01.salesmanagement.dto.CategoryDTO;
+import com.github.vickyrai01.salesmanagement.exception.AlreadyExistsException;
 import com.github.vickyrai01.salesmanagement.exception.NotFoundException;
 import com.github.vickyrai01.salesmanagement.mapper.Mapper;
 import com.github.vickyrai01.salesmanagement.model.Category;
 import com.github.vickyrai01.salesmanagement.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.rmi.AlreadyBoundException;
 import java.util.List;
 
 @Service
@@ -31,9 +33,13 @@ public class CategoryService implements ICategoryService{
     @Override
     public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
 
+        String normalized = categoryDTO.getName().trim().toLowerCase();
+
+        if(categoryRepository.existsByName(normalized)) throw new AlreadyExistsException("Category already exists");
+
         var category = Category.builder()
                 .id(categoryDTO.getId())
-                .name(categoryDTO.getName())
+                .name(normalized)
                 .build();
 
         return Mapper.toDTO(categoryRepository.save(category));

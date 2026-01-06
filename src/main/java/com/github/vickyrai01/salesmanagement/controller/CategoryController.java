@@ -1,7 +1,7 @@
 package com.github.vickyrai01.salesmanagement.controller;
 
 import com.github.vickyrai01.salesmanagement.dto.CategoryDTO;
-import com.github.vickyrai01.salesmanagement.service.ICategoryService;
+import com.github.vickyrai01.salesmanagement.service.category.ICategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.github.vickyrai01.salesmanagement.service;
+package com.github.vickyrai01.salesmanagement.service.category;
 
 import com.github.vickyrai01.salesmanagement.dto.CategoryDTO;
 

@@ -1,4 +1,4 @@
-package com.github.vickyrai01.salesmanagement.service;
+package com.github.vickyrai01.salesmanagement.service.category;
 
 import com.github.vickyrai01.salesmanagement.dto.CategoryDTO;
 import com.github.vickyrai01.salesmanagement.exception.AlreadyExistsException;
@@ -8,11 +8,10 @@ import com.github.vickyrai01.salesmanagement.model.Category;
 import com.github.vickyrai01.salesmanagement.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
-import java.rmi.AlreadyBoundException;
 import java.util.List;
 
 @Service
-public class CategoryService implements ICategoryService{
+public class CategoryService implements ICategoryService {
 
     private final CategoryRepository categoryRepository;
 

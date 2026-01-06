@@ -1,4 +1,4 @@
-package com.github.vickyrai01.salesmanagement.service;
+package com.github.vickyrai01.salesmanagement.service.branch;
 
 import com.github.vickyrai01.salesmanagement.dto.BranchDTO;
 

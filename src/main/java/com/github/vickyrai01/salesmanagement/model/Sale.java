@@ -34,5 +34,4 @@ public class Sale {
     private List<SaleItem> saleItemList;
 
 
-
 }

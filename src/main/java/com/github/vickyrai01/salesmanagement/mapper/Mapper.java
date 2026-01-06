@@ -15,7 +15,6 @@ public class Mapper {
                 .name(product.getName())
                 .price(product.getPrice())
                 .description(product.getDescription())
-                .quantity(product.getQuantity())
                 .categoryList(product.getCategoryList().stream().map(Category::getId).toList())
                 .build();
     }
@@ -64,6 +63,17 @@ public class Mapper {
         return CategoryDTO.builder()
                 .id(category.getId())
                 .name(category.getName())
+                .build();
+    }
+
+    public static BranchStockDTO toDTO(BranchStock branchStock){
+        if (branchStock == null) return null;
+
+        return BranchStockDTO.builder()
+                .id(branchStock.getId())
+                .branchId(branchStock.getBranch().getId())
+                .productId(branchStock.getProduct().getId())
+                .quantity(branchStock.getQuantity())
                 .build();
     }
 }

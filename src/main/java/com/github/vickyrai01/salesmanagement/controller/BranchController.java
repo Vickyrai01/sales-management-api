@@ -1,7 +1,7 @@
 package com.github.vickyrai01.salesmanagement.controller;
 
 import com.github.vickyrai01.salesmanagement.dto.BranchDTO;
-import com.github.vickyrai01.salesmanagement.service.IBranchService;
+import com.github.vickyrai01.salesmanagement.service.branch.IBranchService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

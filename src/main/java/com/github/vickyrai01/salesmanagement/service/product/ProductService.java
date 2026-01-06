@@ -1,4 +1,4 @@
-package com.github.vickyrai01.salesmanagement.service;
+package com.github.vickyrai01.salesmanagement.service.product;
 
 import com.github.vickyrai01.salesmanagement.dto.ProductDTO;
 import com.github.vickyrai01.salesmanagement.exception.NotFoundException;
@@ -41,7 +41,6 @@ public class ProductService implements IProductService {
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
                 .description(productDTO.getDescription())
-                .quantity(productDTO.getQuantity())
                 .categoryList(productDTO.getCategoryList().stream().map(this::toClass).collect(Collectors.toSet()))
                 .build();
 
@@ -56,7 +55,6 @@ public class ProductService implements IProductService {
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
         product.setDescription(productDTO.getDescription());
-        product.setQuantity(productDTO.getQuantity());
 
         return Mapper.toDTO(productRepository.save(product));
     }

@@ -27,10 +27,6 @@ public class ProductDTO {
     @NotBlank(message = "Description cannot be null")
     private String description;
 
-    @NotNull(message = "Quantity cannot be null")
-    @PositiveOrZero(message = "Quantity cannot be negative")
-    private Integer quantity;
-
     @NotNull(message = "The product must have at least one category")
     private List<Long> categoryList;
 

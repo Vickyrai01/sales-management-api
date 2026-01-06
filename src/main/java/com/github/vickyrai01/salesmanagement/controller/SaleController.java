@@ -1,8 +1,7 @@
 package com.github.vickyrai01.salesmanagement.controller;
 
 import com.github.vickyrai01.salesmanagement.dto.SaleDTO;
-import com.github.vickyrai01.salesmanagement.repository.SaleRepository;
-import com.github.vickyrai01.salesmanagement.service.ISaleService;
+import com.github.vickyrai01.salesmanagement.service.sale.ISaleService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +46,20 @@ public class SaleController {
     public ResponseEntity<Void> deleteSale(@PathVariable Long id){
         saleService.deleteSale(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/confirm")
+    public ResponseEntity<SaleDTO> confirmSale(@PathVariable Long id){
+        return ResponseEntity.ok(saleService.confirmSale(id));
+    }
+
+    @PostMapping("/{id}/pay")
+    public ResponseEntity<SaleDTO> paySale(@PathVariable Long id){
+        return ResponseEntity.ok(saleService.paySale(id));
+    }
+
+    @PostMapping("/{id}/cancel")
+    public ResponseEntity<SaleDTO> cancelSale(@PathVariable Long id){
+        return ResponseEntity.ok(saleService.cancelSale(id));
     }
 }

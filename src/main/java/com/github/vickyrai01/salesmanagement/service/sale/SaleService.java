@@ -1,4 +1,4 @@
-package com.github.vickyrai01.salesmanagement.service;
+package com.github.vickyrai01.salesmanagement.service.sale;
 
 import com.github.vickyrai01.salesmanagement.dto.SaleDTO;
 import com.github.vickyrai01.salesmanagement.dto.SaleItemDTO;
@@ -12,7 +12,6 @@ import com.github.vickyrai01.salesmanagement.model.enums.SaleState;
 import com.github.vickyrai01.salesmanagement.repository.BranchRepository;
 import com.github.vickyrai01.salesmanagement.repository.ProductRepository;
 import com.github.vickyrai01.salesmanagement.repository.SaleRepository;
-import com.github.vickyrai01.salesmanagement.service.calculator.SaleCalculator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,12 +23,14 @@ public class SaleService implements ISaleService {
     private final BranchRepository branchRepository;
     private final ProductRepository productRepository;
     private final SaleCalculator saleCalculator;
+    private final SaleStateManager saleStateManager;
 
-    public SaleService(SaleRepository saleRepository, BranchRepository branchRepository, ProductRepository productRepository, SaleCalculator saleCalculator) {
+    public SaleService(SaleRepository saleRepository, BranchRepository branchRepository, ProductRepository productRepository, SaleCalculator saleCalculator, SaleStateManager saleStateManager) {
         this.saleRepository = saleRepository;
         this.branchRepository = branchRepository;
         this.productRepository = productRepository;
         this.saleCalculator = saleCalculator;
+        this.saleStateManager = saleStateManager;
     }
 
     @Override
@@ -71,8 +72,6 @@ public class SaleService implements ISaleService {
         var sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
 
         if(saleDTO.getDate() != null) sale.setDate(saleDTO.getDate());
-        if(saleDTO.getState() != null) sale.setState(saleDTO.getState());
-        if(saleDTO.getTotal() != null) sale.setTotal(saleDTO.getTotal());
         if (saleDTO.getBranchId() != null){
             Branch branch = branchRepository.findById(saleDTO.getBranchId()).orElseThrow(() -> new NotFoundException("branch not found"));
             sale.setBranch(branch);
@@ -84,6 +83,27 @@ public class SaleService implements ISaleService {
     public void deleteSale(Long id) {
         if (!saleRepository.existsById(id)) throw new NotFoundException("Sale not found");
         saleRepository.deleteById(id);
+    }
+
+    @Override
+    public SaleDTO confirmSale(Long id) {
+        Sale sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
+        sale = saleStateManager.confirmSale(sale);
+        return Mapper.toDTO(saleRepository.save(sale));
+    }
+
+    @Override
+    public SaleDTO paySale(Long id) {
+        Sale sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
+        sale = saleStateManager.paySale(sale);
+        return Mapper.toDTO(saleRepository.save(sale));
+    }
+
+    @Override
+    public SaleDTO cancelSale(Long id) {
+        Sale sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
+        sale = saleStateManager.cancelSale(sale);
+        return Mapper.toDTO(saleRepository.save(sale));
     }
 
     private SaleItem toClass(SaleItemDTO saleItemDTO) {

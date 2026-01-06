@@ -1,4 +1,4 @@
-package com.github.vickyrai01.salesmanagement.service;
+package com.github.vickyrai01.salesmanagement.service.sale;
 
 import com.github.vickyrai01.salesmanagement.dto.SaleDTO;
 
@@ -11,5 +11,9 @@ public interface ISaleService {
     SaleDTO saveSale(SaleDTO saleDTO);
     SaleDTO updateSale(Long id, SaleDTO saleDTO);
     void deleteSale(Long id);
+
+    SaleDTO confirmSale(Long id);
+    SaleDTO paySale(Long id);
+    SaleDTO cancelSale(Long id);
 
 }

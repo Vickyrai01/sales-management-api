@@ -1,6 +1,5 @@
-package com.github.vickyrai01.salesmanagement.service.calculator;
+package com.github.vickyrai01.salesmanagement.service.sale;
 
-import com.github.vickyrai01.salesmanagement.dto.SaleItemDTO;
 import com.github.vickyrai01.salesmanagement.model.Product;
 import com.github.vickyrai01.salesmanagement.model.SaleItem;
 import org.springframework.stereotype.Component;

@@ -13,6 +13,7 @@ import com.github.vickyrai01.salesmanagement.repository.BranchRepository;
 import com.github.vickyrai01.salesmanagement.repository.ProductRepository;
 import com.github.vickyrai01.salesmanagement.repository.SaleRepository;
 import com.github.vickyrai01.salesmanagement.service.branchStock.StockManager;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,10 +50,9 @@ public class SaleService implements ISaleService {
     @Override
     public SaleDTO saveSale(SaleDTO saleDTO) {
 
-        if(!branchRepository.existsById(saleDTO.getBranchId())) throw new NotFoundException("Branch not found");
         if(saleDTO.getSaleItemDTOList() == null) throw new RuntimeException("The list must contain at least one item");
 
-        Branch branch = branchRepository.findById(saleDTO.getBranchId()).orElse(null);
+        Branch branch = branchRepository.findById(saleDTO.getBranchId()).orElseThrow(() -> new NotFoundException("Branch not found"));
         List<SaleItem> saleItemList = saleDTO.getSaleItemDTOList().stream().map(this::toClass).toList();
         Double total = saleCalculator.calculateSaleTotal(saleItemList);
 
@@ -89,6 +89,7 @@ public class SaleService implements ISaleService {
     }
 
     @Override
+    @Transactional
     public SaleDTO confirmSale(Long id) {
         Sale sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
         stockManager.validateAndDecreaseStock(sale.getBranch().getId(), sale.getSaleItemList());
@@ -97,6 +98,7 @@ public class SaleService implements ISaleService {
     }
 
     @Override
+    @Transactional
     public SaleDTO paySale(Long id) {
         Sale sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
         sale = saleStateManager.paySale(sale);

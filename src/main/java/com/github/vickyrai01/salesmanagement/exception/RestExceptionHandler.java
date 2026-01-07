@@ -55,6 +55,30 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ErrorMessage> handleInsufficientStock(InsufficientStockException ex, HttpServletRequest req) {
+        ErrorMessage body = new ErrorMessage();
+        body.setStatus(409);
+        body.setError("INSUFFICIENT_STOCK");
+        body.setMessage(ex.getMessage());
+        body.setPath(req.getRequestURI());
+        body.setTimestamp(Instant.now());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
+    @ExceptionHandler(ProductNotAvailableInBranchException.class)
+    public ResponseEntity<ErrorMessage> handleProductNotAvailableInBranch(ProductNotAvailableInBranchException ex, HttpServletRequest req) {
+        ErrorMessage body = new ErrorMessage();
+        body.setStatus(409);
+        body.setError("PRODUCT_NOT_AVAILABLE_IN_BRANCH");
+        body.setMessage(ex.getMessage());
+        body.setPath(req.getRequestURI());
+        body.setTimestamp(Instant.now());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleGeneric(Exception ex, HttpServletRequest req) {
 
@@ -76,5 +100,4 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
-
 }

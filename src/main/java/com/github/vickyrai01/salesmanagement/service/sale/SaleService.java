@@ -12,6 +12,7 @@ import com.github.vickyrai01.salesmanagement.model.enums.SaleState;
 import com.github.vickyrai01.salesmanagement.repository.BranchRepository;
 import com.github.vickyrai01.salesmanagement.repository.ProductRepository;
 import com.github.vickyrai01.salesmanagement.repository.SaleRepository;
+import com.github.vickyrai01.salesmanagement.service.branchStock.StockManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,13 +25,15 @@ public class SaleService implements ISaleService {
     private final ProductRepository productRepository;
     private final SaleCalculator saleCalculator;
     private final SaleStateManager saleStateManager;
+    private final StockManager stockManager;
 
-    public SaleService(SaleRepository saleRepository, BranchRepository branchRepository, ProductRepository productRepository, SaleCalculator saleCalculator, SaleStateManager saleStateManager) {
+    public SaleService(SaleRepository saleRepository, BranchRepository branchRepository, ProductRepository productRepository, SaleCalculator saleCalculator, SaleStateManager saleStateManager, StockManager stockManager) {
         this.saleRepository = saleRepository;
         this.branchRepository = branchRepository;
         this.productRepository = productRepository;
         this.saleCalculator = saleCalculator;
         this.saleStateManager = saleStateManager;
+        this.stockManager = stockManager;
     }
 
     @Override
@@ -88,6 +91,7 @@ public class SaleService implements ISaleService {
     @Override
     public SaleDTO confirmSale(Long id) {
         Sale sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
+        stockManager.validateAndDecreaseStock(sale.getBranch().getId(), sale.getSaleItemList());
         sale = saleStateManager.confirmSale(sale);
         return Mapper.toDTO(saleRepository.save(sale));
     }

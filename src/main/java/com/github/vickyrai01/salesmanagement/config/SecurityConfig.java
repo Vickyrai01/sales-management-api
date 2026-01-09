@@ -1,5 +1,6 @@
 package com.github.vickyrai01.salesmanagement.config;
 
+import com.github.vickyrai01.salesmanagement.service.auth.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,9 +31,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final UserService userService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, UserService userService) {
         this.authenticationConfiguration = authenticationConfiguration;
+        this.userService = userService;
     }
 
     @Bean
@@ -64,37 +67,20 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(userService);
         return authenticationProvider;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-
-        List<UserDetails> users = new ArrayList<>();
-
-        users.add(User.withUsername("Victoria")
-                .password("2003")
-                .roles("ADMIN")
-                .build()
-        );
-        users.add(User.withUsername("Osvaldo")
-                .password("2021")
-                .roles("SELLER")
-                .build()
-        );
-        users.add(User.withUsername("Donna")
-                .password("2011")
-                .roles("STOCK_MANAGER")
-                .build()
-        );
-
-        return new InMemoryUserDetailsManager(users);
-    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return NoOpPasswordEncoder.getInstance();
-        //return new BCryptPasswordEncoder();
+        //return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
+
+    /*
+    public static void main(String[] args) {
+        System.out.println(new BCryptPasswordEncoder().encode("2003"));
+    }
+    */
 }

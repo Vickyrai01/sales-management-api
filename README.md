@@ -1,32 +1,115 @@
-# Getting Started
+# Sales Management API
 
-### Reference Documentation
-For further reference, please consider the following sections:
+REST API para gestión de sucursales, productos y ventas.
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.5.9/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.5.9/maven-plugin/build-image.html)
-* [Spring Web](https://docs.spring.io/spring-boot/3.5.9/reference/web/servlet.html)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/3.5.9/reference/data/sql.html#data.sql.jpa-and-spring-data)
-* [Spring Security](https://docs.spring.io/spring-boot/3.5.9/reference/web/spring-security.html)
-* [Flyway Migration](https://docs.spring.io/spring-boot/3.5.9/how-to/data-initialization.html#howto.data-initialization.migration-tool.flyway)
+Incluye:
+- Autenticación con **Basic Auth**
+- Autorización por **roles (3 roles)**
+- Persistencia en **MySQL**
+- Contenedorización con **Docker + Docker Compose**
 
-### Guides
-The following guides illustrate how to use some features concretely:
+---
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Accessing data with MySQL](https://spring.io/guides/gs/accessing-data-mysql/)
-* [Securing a Web Application](https://spring.io/guides/gs/securing-web/)
-* [Spring Boot and OAuth2](https://spring.io/guides/tutorials/spring-boot-oauth2/)
-* [Authenticating a User with LDAP](https://spring.io/guides/gs/authenticating-ldap/)
+## Stack
+- Java 17
+- Spring Boot (Web, Validation, Data JPA)
+- Spring Security (Basic Auth + roles)
+- MySQL 8
+- Flyway
+- Docker / Docker Compose
 
-### Maven Parent overrides
+---
 
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+## Ejecutar con Docker (recomendado)
 
+### 1) Clonar el repo
+```bash
+git clone https://github.com/Vickyrai01/sales-management-api.git
+cd sales-management-api
+```
+
+### 2) Crear `.env`
+Creá un `.env` en la raíz (podés copiar `.env.example`):
+
+```bash
+cp .env.example .env
+```
+
+### 3) Levantar API + MySQL
+```bash
+docker compose up --build
+```
+
+- API: http://localhost:8080
+- MySQL (host local): `localhost:3307`
+
+### Detener / borrar
+- Detener (conserva datos):
+```bash
+docker compose down
+```
+
+- Borrar todo (incluye datos):
+```bash
+docker compose down -v
+```
+
+---
+
+## Variables de entorno
+
+### MySQL (contenedor)
+Configuradas por Docker Compose:
+- `MYSQL_ROOT_PASSWORD`
+- `MYSQL_DATABASE`
+- `MYSQL_USER`
+- `MYSQL_PASSWORD`
+
+### API (Spring Boot)
+Docker Compose inyecta:
+- `DB_URL=jdbc:mysql://mysql:3306/${MYSQL_DATABASE}?allowPublicKeyRetrieval=true&useSSL=false`
+- `DB_USER=${MYSQL_USER}`
+- `DB_PASSWORD=${MYSQL_PASSWORD}`
+- `DDL_AUTO=update`
+
+---
+
+## Seguridad (Basic Auth + Roles)
+
+Esta API usa **HTTP Basic Authentication**.
+
+### Roles
+- `ADMIN`: acceso a la creacion de productos, sucursales y categorias.
+- `SELLER`: Encargado de operaciones sobre las ventas, crearlas, eliminarlas, modificarlas, aceptarlas, etc.
+- `STOCK_MANAGER`: Acceso mas limitado, puede crear el stock de un producto en una sucursal
+
+### Probar con curl (ejemplos)
+
+
+
+### Respuestas esperadas
+- `200 OK` si el usuario tiene permisos.
+- `401 Unauthorized` si no mandás credenciales o son incorrectas.
+- `403 Forbidden` si autenticás pero el rol no tiene acceso.
+
+---
+
+## Flyway (migraciones)
+Flyway ejecuta migraciones en:
+
+`src/main/resources/db/migration`
+
+Convención:
+- `V1__init.sql`
+- `V2__...sql`
+
+Flyway registra el estado en:
+- `flyway_schema_history`
+
+---
+
+## Roadmap / mejoras
+- Swagger / OpenAPI
+- Logs (logback + request logging)
+- Tests (unit + integration)
+- CI (GitHub Actions)

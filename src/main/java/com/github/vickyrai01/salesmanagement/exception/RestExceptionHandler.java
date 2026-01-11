@@ -3,6 +3,7 @@ package com.github.vickyrai01.salesmanagement.exception;
 import com.github.vickyrai01.salesmanagement.exception.dto.ErrorMessage;
 import com.github.vickyrai01.salesmanagement.exception.dto.ValidationErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -18,10 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@Slf4j
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessage> handleNotFound(NotFoundException ex, HttpServletRequest req) {
+
+        log.warn("Resource not found at '{}', method {}: {}", req.getRequestURI(), req.getMethod(), ex.getMessage());
+
         ErrorMessage body = new ErrorMessage();
         body.setStatus(404);
         body.setError("NOT_FOUND");
@@ -34,6 +39,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<ErrorMessage> handleAlreadyExists(AlreadyExistsException ex, HttpServletRequest req) {
+
+        log.warn("Resource already exists at '{}', method {}: {}", req.getRequestURI(), req.getMethod(), ex.getMessage());
+
         ErrorMessage body = new ErrorMessage();
         body.setStatus(409);
         body.setError("ALREADY_EXISTS");
@@ -46,6 +54,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidSaleStateException.class)
     public ResponseEntity<ErrorMessage> handleInvalidSaleState(InvalidSaleStateException ex, HttpServletRequest req) {
+
+        log.warn("Sale is not in valid state at '{}', method {}: {}", req.getRequestURI(), req.getMethod(), ex.getMessage());
+
         ErrorMessage body = new ErrorMessage();
         body.setStatus(409);
         body.setError("INVALID_STATE");
@@ -58,6 +69,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InsufficientStockException.class)
     public ResponseEntity<ErrorMessage> handleInsufficientStock(InsufficientStockException ex, HttpServletRequest req) {
+
+        log.warn("Insufficient stock at '{}', method {}: {}", req.getRequestURI(), req.getMethod(), ex.getMessage());
+
         ErrorMessage body = new ErrorMessage();
         body.setStatus(409);
         body.setError("INSUFFICIENT_STOCK");
@@ -70,6 +84,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ProductNotAvailableInBranchException.class)
     public ResponseEntity<ErrorMessage> handleProductNotAvailableInBranch(ProductNotAvailableInBranchException ex, HttpServletRequest req) {
+
+        log.warn("Product not available in branch at '{}', method {}: {}", req.getRequestURI(), req.getMethod(), ex.getMessage());
+
         ErrorMessage body = new ErrorMessage();
         body.setStatus(409);
         body.setError("PRODUCT_NOT_AVAILABLE_IN_BRANCH");
@@ -80,8 +97,25 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorMessage> handleBadRequest(BadRequestException ex, HttpServletRequest req) {
+
+        log.warn("Bad request at '{}', method {}: {}", req.getRequestURI(), req.getMethod(), ex.getMessage());
+
+        ErrorMessage body = new ErrorMessage();
+        body.setStatus(400);
+        body.setError("BAD_REQUEST");
+        body.setMessage(ex.getMessage());
+        body.setPath(req.getRequestURI());
+        body.setTimestamp(Instant.now());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleGeneric(Exception ex, HttpServletRequest req) {
+
+        log.error("Unexpected error at '{}', method {}: {}", req.getRequestURI(), req.getMethod(), ex.getMessage(), ex);
 
         ErrorMessage body = new ErrorMessage();
         body.setStatus(500);
@@ -95,6 +129,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        log.warn("Validation error: {}", ex.getMessage());
+
         Map<String,Object> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->{
             errors.put(error.getField(), error.getDefaultMessage());

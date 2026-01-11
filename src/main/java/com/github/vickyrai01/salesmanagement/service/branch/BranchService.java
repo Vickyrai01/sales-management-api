@@ -30,15 +30,13 @@ public class BranchService implements IBranchService {
     public BranchDTO getBranchById(Long id) {
         log.info("Getting branch by id: {}", id);
         return branchRepository.findById(id).map(Mapper::toDTO)
-                .orElseThrow(() -> {log.warn("Branch not found for id: {}", id);
-                                    return new NotFoundException("Branch not found");
-                });
+                .orElseThrow(() ->  new NotFoundException("Branch not found"));
     }
 
     @Override
     public BranchDTO saveBranch(BranchDTO branchDTO) {
 
-        log.info("Saving branch: {}", branchDTO);
+        log.info("Saving branch with name: {}", branchDTO.getName());
         var branch = Branch.builder()
                 .id(branchDTO.getId())
                 .name(branchDTO.getName())
@@ -53,24 +51,20 @@ public class BranchService implements IBranchService {
     public BranchDTO updateBranch(Long id, BranchDTO branchDTO) {
 
         var branch = branchRepository.findById(id)
-                .orElseThrow(() -> {log.warn("Branch not found for id: {}", id);
-                                    return new NotFoundException("Branch not found");
-                });
+                .orElseThrow(() -> new NotFoundException("Branch not found"));
 
         branch.setName(branchDTO.getName());
         branch.setDirection(branchDTO.getDirection());
         branch.setTelephone(branchDTO.getTelephone());
 
-        log.info("Updating branch: {}", branchDTO);
+        log.info("Updating branch with id: {}", branchDTO.getId());
         return Mapper.toDTO(branchRepository.save(branch));
     }
 
     @Override
     public void deleteBranch(Long id) {
-        if (!branchRepository.existsById(id)){
-            log.warn("Branch not found for id: {}", id);
-            throw new NotFoundException("Branch not found");
-        }
+        if (!branchRepository.existsById(id)) throw new NotFoundException("Branch not found");
+
         log.info("Deleting branch by id: {}", id);
         branchRepository.deleteById(id);
     }

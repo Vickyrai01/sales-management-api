@@ -9,11 +9,13 @@ import com.github.vickyrai01.salesmanagement.model.Product;
 import com.github.vickyrai01.salesmanagement.repository.BranchRepository;
 import com.github.vickyrai01.salesmanagement.repository.BranchStockRepository;
 import com.github.vickyrai01.salesmanagement.repository.ProductRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class BranchStockService implements IBranchStockService{
 
     private final BranchStockRepository branchStockRepository;
@@ -28,11 +30,13 @@ public class BranchStockService implements IBranchStockService{
 
     @Override
     public List<BranchStockDTO> getAllBranchStock() {
+        log.info("Getting all branch stocks");
         return branchStockRepository.findAll().stream().map(Mapper::toDTO).toList();
     }
 
     @Override
     public BranchStockDTO getBranchStockById(Long id) {
+        log.info("Getting branch stock by id: {}", id);
         return branchStockRepository.findById(id).map(Mapper::toDTO).orElseThrow(()-> new NotFoundException("Branch stock not found"));
     }
 
@@ -49,6 +53,7 @@ public class BranchStockService implements IBranchStockService{
                 .quantity(branchStockDTO.getQuantity())
                 .build();
 
+        log.info("Saving branch stock with product id: {} and branch id: {}", branchStockDTO.getProductId(), branchStockDTO.getBranchId());
         return Mapper.toDTO(branchStockRepository.save(branchStock));
     }
 
@@ -57,12 +62,14 @@ public class BranchStockService implements IBranchStockService{
         if (!branchStockRepository.existsById(id)) throw new NotFoundException("Branch stock not found");
         BranchStock branchStock = branchStockRepository.findById(id).orElseThrow(()-> new NotFoundException("Branch stock not found"));
         if(branchStockDTO.getQuantity() != null) branchStock.setQuantity(branchStockDTO.getQuantity());
+        log.info("Updating branch stock with id: {}", branchStockDTO.getBranchId());
         return Mapper.toDTO(branchStockRepository.save(branchStock));
     }
 
     @Override
     public void deleteBranchStock(Long id) {
         if (!branchStockRepository.existsById(id)) throw new NotFoundException("Branch stock not found");
+        log.info("Deleting branch stock by id: {}", id);
         branchStockRepository.deleteById(id);
     }
 }

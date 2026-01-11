@@ -2,6 +2,7 @@ package com.github.vickyrai01.salesmanagement.service.sale;
 
 import com.github.vickyrai01.salesmanagement.dto.SaleDTO;
 import com.github.vickyrai01.salesmanagement.dto.SaleItemDTO;
+import com.github.vickyrai01.salesmanagement.exception.BadRequestException;
 import com.github.vickyrai01.salesmanagement.exception.NotFoundException;
 import com.github.vickyrai01.salesmanagement.mapper.Mapper;
 import com.github.vickyrai01.salesmanagement.model.Branch;
@@ -14,11 +15,13 @@ import com.github.vickyrai01.salesmanagement.repository.ProductRepository;
 import com.github.vickyrai01.salesmanagement.repository.SaleRepository;
 import com.github.vickyrai01.salesmanagement.service.branchStock.StockManager;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class SaleService implements ISaleService {
 
     private final SaleRepository saleRepository;
@@ -39,18 +42,21 @@ public class SaleService implements ISaleService {
 
     @Override
     public List<SaleDTO> getAllSales() {
+        log.info("Getting all sales");
         return saleRepository.findAll().stream().map(Mapper::toDTO).toList();
     }
 
     @Override
     public SaleDTO getSaleById(Long id) {
-        return saleRepository.findById(id).map(Mapper::toDTO).orElseThrow(() -> new NotFoundException("Sale not found"));
+        log.info("Getting sale by id: {}", id);
+        return saleRepository.findById(id).map(Mapper::toDTO)
+                .orElseThrow(() -> new NotFoundException("Sale not found"));
     }
 
     @Override
     public SaleDTO saveSale(SaleDTO saleDTO) {
 
-        if(saleDTO.getSaleItemDTOList() == null) throw new RuntimeException("The list must contain at least one item");
+        if(saleDTO.getSaleItemDTOList() == null) throw new BadRequestException("The list must contain at least one item");
 
         Branch branch = branchRepository.findById(saleDTO.getBranchId()).orElseThrow(() -> new NotFoundException("Branch not found"));
         List<SaleItem> saleItemList = saleDTO.getSaleItemDTOList().stream().map(this::toClass).toList();
@@ -66,6 +72,8 @@ public class SaleService implements ISaleService {
                 .build();
 
         saleItemList.forEach(item -> item.setSale(sale));
+
+        log.info("Saving sale with id: {}", sale.getId());
         return Mapper.toDTO(saleRepository.save(sale));
     }
 
@@ -79,12 +87,15 @@ public class SaleService implements ISaleService {
             Branch branch = branchRepository.findById(saleDTO.getBranchId()).orElseThrow(() -> new NotFoundException("branch not found"));
             sale.setBranch(branch);
         }
+        log.info("Updating sale with id: {}", saleDTO.getId());
         return Mapper.toDTO(saleRepository.save(sale));
     }
 
     @Override
     public void deleteSale(Long id) {
         if (!saleRepository.existsById(id)) throw new NotFoundException("Sale not found");
+
+        log.info("Deleting sale by id: {}", id);
         saleRepository.deleteById(id);
     }
 
@@ -94,6 +105,7 @@ public class SaleService implements ISaleService {
         Sale sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
         stockManager.validateAndDecreaseStock(sale.getBranch().getId(), sale.getSaleItemList());
         sale = saleStateManager.confirmSale(sale);
+        log.info("Sale with id {} confirmed", sale.getId());
         return Mapper.toDTO(saleRepository.save(sale));
     }
 
@@ -102,6 +114,7 @@ public class SaleService implements ISaleService {
     public SaleDTO paySale(Long id) {
         Sale sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
         sale = saleStateManager.paySale(sale);
+        log.info("Sale with id {} paid", sale.getId());
         return Mapper.toDTO(saleRepository.save(sale));
     }
 
@@ -109,6 +122,7 @@ public class SaleService implements ISaleService {
     public SaleDTO cancelSale(Long id) {
         Sale sale = saleRepository.findById(id).orElseThrow(() -> new NotFoundException("Sale not found"));
         sale = saleStateManager.cancelSale(sale);
+        log.info("Sale with id {} canceled", sale.getId());
         return Mapper.toDTO(saleRepository.save(sale));
     }
 

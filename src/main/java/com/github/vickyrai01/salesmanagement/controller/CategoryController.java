@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +60,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "409", description = "Category already exists",
                     content = @Content(schema = @Schema(implementation = ErrorMessage.class)))
     })
-    public ResponseEntity<CategoryDTO> saveCategory(@RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<CategoryDTO> saveCategory(@Valid @RequestBody CategoryDTO categoryDTO){
         CategoryDTO category = categoryService.saveCategory(categoryDTO);
         return ResponseEntity.created(URI.create("/api/category/" + category.getId())).body(category);
     }

@@ -107,9 +107,13 @@ Flyway registra el estado en:
 - `flyway_schema_history`
 
 ---
+## Documentacion de la api
+
+Corriendo el proyecto entrando al link:
+- http://localhost:8080/swagger-ui/index.html
+
+---
 
 ## Roadmap / mejoras
-- Swagger / OpenAPI
 - Logs (logback + request logging)
 - Tests (unit + integration)
-- CI (GitHub Actions)

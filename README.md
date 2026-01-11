@@ -163,6 +163,15 @@ Flyway tracking table:
 - `flyway_schema_history`
 
 ---
+## Observability (Logging)
+
+This project includes a minimal logging setup to make the API behavior easy to understand while testing.
+
+- Key business events are logged (e.g. sale creation and state transitions, stock updates).
+- Exceptions are handled centrally via `RestExceptionHandler` and returned as consistent JSON error responses.
+- Sensitive data (credentials) is not logged.
+
+---
 
 ## Roadmap / Improvements
 

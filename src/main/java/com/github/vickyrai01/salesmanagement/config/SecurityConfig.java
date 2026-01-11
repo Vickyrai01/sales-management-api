@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/branch/**").hasAnyRole("ADMIN", "STOCK_MANAGER")
                     .requestMatchers("/api/branch/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET, "/api/product/**").hasAnyRole("ADMIN", "STOCK_MANAGER")

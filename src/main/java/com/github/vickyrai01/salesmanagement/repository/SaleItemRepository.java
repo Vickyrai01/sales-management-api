@@ -1,4 +1,4 @@
-package com.github.vickyrai01.salesmanagement.service.branch;
+package com.github.vickyrai01.salesmanagement.repository;
 
 import com.github.vickyrai01.salesmanagement.model.SaleItem;
 import org.springframework.data.repository.Repository;

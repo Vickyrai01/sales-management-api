@@ -57,7 +57,7 @@ public class BranchService implements IBranchService {
         branch.setDirection(branchDTO.getDirection());
         branch.setTelephone(branchDTO.getTelephone());
 
-        log.info("Updating branch with id: {}", branchDTO.getId());
+        log.info("Updating branch with id: {}", branch.getId());
         return Mapper.toDTO(branchRepository.save(branch));
     }
 

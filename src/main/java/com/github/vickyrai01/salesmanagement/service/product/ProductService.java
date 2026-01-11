@@ -61,7 +61,7 @@ public class ProductService implements IProductService {
         product.setPrice(productDTO.getPrice());
         product.setDescription(productDTO.getDescription());
 
-        log.info("Updating product with id: {}", productDTO.getId());
+        log.info("Updating product with id: {}", product.getId());
         return Mapper.toDTO(productRepository.save(product));
     }
     @Override

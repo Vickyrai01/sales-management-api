@@ -62,7 +62,7 @@ public class BranchStockService implements IBranchStockService{
         if (!branchStockRepository.existsById(id)) throw new NotFoundException("Branch stock not found");
         BranchStock branchStock = branchStockRepository.findById(id).orElseThrow(()-> new NotFoundException("Branch stock not found"));
         if(branchStockDTO.getQuantity() != null) branchStock.setQuantity(branchStockDTO.getQuantity());
-        log.info("Updating branch stock with id: {}", branchStockDTO.getBranchId());
+        log.info("Updating branch stock with id: {}", branchStock.getId());
         return Mapper.toDTO(branchStockRepository.save(branchStock));
     }
 

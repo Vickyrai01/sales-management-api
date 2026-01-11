@@ -73,7 +73,7 @@ public class SaleService implements ISaleService {
 
         saleItemList.forEach(item -> item.setSale(sale));
 
-        log.info("Saving sale with id: {}", sale.getId());
+        log.info("Saving sale with total: {}", sale.getTotal());
         return Mapper.toDTO(saleRepository.save(sale));
     }
 
@@ -87,7 +87,7 @@ public class SaleService implements ISaleService {
             Branch branch = branchRepository.findById(saleDTO.getBranchId()).orElseThrow(() -> new NotFoundException("branch not found"));
             sale.setBranch(branch);
         }
-        log.info("Updating sale with id: {}", saleDTO.getId());
+        log.info("Updating sale with id: {}", sale.getId());
         return Mapper.toDTO(saleRepository.save(sale));
     }
 

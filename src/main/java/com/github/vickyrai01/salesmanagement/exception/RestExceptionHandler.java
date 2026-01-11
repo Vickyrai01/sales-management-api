@@ -1,6 +1,7 @@
 package com.github.vickyrai01.salesmanagement.exception;
 
 import com.github.vickyrai01.salesmanagement.exception.dto.ErrorMessage;
+import com.github.vickyrai01.salesmanagement.exception.dto.ValidationErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -98,6 +99,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error ->{
             errors.put(error.getField(), error.getDefaultMessage());
         });
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ValidationErrorResponse(errors));
     }
 }

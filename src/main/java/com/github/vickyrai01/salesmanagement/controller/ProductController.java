@@ -1,7 +1,15 @@
 package com.github.vickyrai01.salesmanagement.controller;
 
 import com.github.vickyrai01.salesmanagement.dto.ProductDTO;
+import com.github.vickyrai01.salesmanagement.exception.dto.ErrorMessage;
+import com.github.vickyrai01.salesmanagement.exception.dto.ValidationErrorResponse;
 import com.github.vickyrai01.salesmanagement.service.product.IProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
+@Tag(name = "Products", description = "Operations for managing products")
 public class ProductController {
 
     private final IProductService productService;
@@ -21,28 +30,70 @@ public class ProductController {
     }
 
     @GetMapping
+    @Operation(
+            summary = "Get all products",
+            description = "Retrieves a list of all products. Requires ADMIN or STOCK_MANAGER role."
+    )
     public ResponseEntity<List<ProductDTO>> getAllProducts(){
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Get product by ID",
+            description = "Retrieves a specific product by its ID. Requires ADMIN or STOCK_MANAGER role."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Product found"),
+            @ApiResponse(responseCode = "404", description = "Product not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessage.class)))
+    })
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id){
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @PostMapping
+    @Operation(
+            summary = "Create new product",
+            description = "Creates a new product. Requires ADMIN role."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Product created successfully"),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content(schema = @Schema(implementation = ValidationErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Category not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessage.class)))
+    })
     public ResponseEntity<ProductDTO> saveProduct(@Valid @RequestBody ProductDTO productDTO){
         ProductDTO product = productService.saveProduct(productDTO);
         return ResponseEntity.created(URI.create("/api/product/" + product.getId())).body(product);
     }
 
     @PutMapping("/{id}")
+    @Operation(
+            summary = "Update product",
+            description = "Updates an existing product. Requires ADMIN role."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Product updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Product not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessage.class)))
+    })
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO){
         ProductDTO product = productService.updateProduct(id, productDTO);
         return ResponseEntity.ok(product);
     }
 
     @DeleteMapping("/{id}")
+    @Operation(
+            summary = "Delete product",
+            description = "Deletes a product by ID. Requires ADMIN role."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Product deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Product not found",
+                    content = @Content(schema = @Schema(implementation = ErrorMessage.class)))
+    })
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();

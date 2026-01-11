@@ -4,11 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Map;
 
-@Schema(description = "Errores de validación por campo.")
+@Schema(description = "Validation errors by field.")
 public class ValidationErrorResponse {
 
     @Schema(
-            description = "Mapa field -> mensaje de error",
+            description = "Map of field name to error message",
             example = "{\"name\":\"must not be blank\",\"price\":\"must be greater than 0\"}"
     )
     private Map<String, Object> errors;

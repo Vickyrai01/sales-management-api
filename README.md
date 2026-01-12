@@ -43,8 +43,13 @@ cp .env.example .env
 docker compose up --build
 ```
 
-- API: http://localhost:8080
-- MySQL (host local): `localhost:3307`
+**Default local URLs:**
+- API Base URL: `${BASE_URL}`
+- MySQL (host): `localhost:3307`
+
+> Example (local):
+> - `http://localhost:8080`
+> - `localhost:3307`
 
 ### Stop / clean up
 - Stop (keep data):
@@ -79,11 +84,15 @@ Docker Compose injects:
 
 ## API Documentation (Swagger / OpenAPI)
 
-Swagger UI:
-- http://localhost:8080/swagger-ui/index.html
+**Default base URL (local):** `http://localhost:8080`  
+If you run the API on another host/port, replace `BASE_URL` accordingly.
 
-OpenAPI JSON:
-- http://localhost:8080/v3/api-docs
+- Swagger UI: `${BASE_URL}/swagger-ui/index.html`
+- OpenAPI JSON: `${BASE_URL}/v3/api-docs`
+
+> Example (local):
+> - `http://localhost:8080/swagger-ui/index.html`
+> - `http://localhost:8080/v3/api-docs`
 
 > Swagger endpoints are publicly accessible (no auth required).
 
@@ -141,13 +150,9 @@ This repository includes a Postman collection and an environment to test the API
 5. Select the environment **sales management api** in the top-right dropdown
 
 ### Authentication
-All secured endpoints use **HTTP Basic Auth**.
-The collection is configured to read credentials from the environment variables above.
 
-### Swagger (public)
-- Swagger UI: `http://localhost:8080/swagger-ui/index.html`
-- OpenAPI JSON: `http://localhost:8080/v3/api-docs`
-
+- All secured endpoints use **HTTP Basic Auth**.
+- The collection is configured to read credentials from the environment variables above.
 ---
 
 ## Flyway (migrations)
